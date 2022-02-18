@@ -37,8 +37,8 @@ usersRouter.post("/", async (req: Request, res: Response) => {
         const newUser = req.body as IUser;
         const result =  await (await DbConnection.getDbCollection()).insertOne(newUser);
         result
-            ? res.status(200).send(`Successfully created a new user with id ${result.insertedId}`)
-            : res.status(500).send("Failed to create a new user.");
+            ? res.status(200).send({"status":true,'result':`Successfully created a new user with id ${result.insertedId}`})
+            : res.status(500).send({"status":false,'result':"Failed to create a new user."});
     } catch (error) {
         res.status(400).send(error.message);
     }

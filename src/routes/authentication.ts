@@ -16,10 +16,10 @@ authenticationRouter.post('/',async (req:Request,res:Response) =>{
       if(result !== null){
         result.forEach(el =>{
           if(el.email === userDetails.email && el.password === userDetails.password){
-            res.status(200).send("Logged in successfully")
+            res.status(200).send({"result":"Logged in successfully"})
           }
         })
-        res.status(401).send('Either your email or password is incorrect!');
+        res.status(401).send({'result':'Either your email or password is incorrect!'});
       }
   }
   catch(err){}

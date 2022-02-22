@@ -9,6 +9,7 @@ dotenv.config();
 import Mongoose from 'mongoose';
 import { DbConnection } from './services/database.service';
 import { authenticationRouter } from './routes/authentication';
+import { productsRouter } from './routes/products';
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URL;
 const app = express();
@@ -33,6 +34,7 @@ const options: cors.CorsOptions = {
 app.use(cors());
 app.use("/users", usersRouter);
 app.use("/login", authenticationRouter);
+app.use("/products", productsRouter);
 new DbConnection();
 app.listen(PORT, () => {
     console.log(`Server started and listening at http://localhost:${PORT}`);

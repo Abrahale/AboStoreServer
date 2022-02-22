@@ -1,16 +1,14 @@
-// External Dependencies
 import express, { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import {IUser, User} from "../models/user";
 import { DbConnection } from "../services/database.service";
 import * as dontenv from "dotenv";
-// Global Config
-export const usersRouter = express.Router();
-usersRouter.use(express.json());
+export const productsRouter = express.Router();
+productsRouter.use(express.json());
 // GET
-usersRouter.get("/", async (_req: Request, res: Response) => {
+productsRouter.get("/", async (_req: Request, res: Response) => {
     try {
-       const collection = (await DbConnection.getDbCollection(process.env.USERS_COLLECTION_NAME));
+       const collection = (await DbConnection.getDbCollection(process.env.PRODUCTS_COLLECTION_NAME));
         const users = await collection.find({}).toArray();
         res.status(200).send({users});
     } catch (error: any) {
@@ -18,25 +16,25 @@ usersRouter.get("/", async (_req: Request, res: Response) => {
     }
 });
 
-usersRouter.get("/:id", async (req: Request, res: Response) => {
+productsRouter.get("/:id", async (req: Request, res: Response) => {
     const id = req?.params?.id;
 
     try {
 
         const query = { _id: new ObjectId(id) };
-        const result =  (await DbConnection.getDbCollection(process.env.USERS_COLLECTION_NAME)).findOne(query) as unknown as User[];
+        const result =  (await DbConnection.getDbCollection(process.env.PRODUCTS_COLLECTION_NAME)).findOne(query) as unknown as any[];
         if (result) {
-            res.status(200).send(result);
+            res.status(200).send({result});
         }
     } catch (error) {
-        res.status(404).send(`Unable to find matching document with id: ${req.params.id}`);
+        res.status(404).send({'error':`Unable to find matching document with id: ${req.params.id}`});
     }
 });
 // POST
-usersRouter.post("/", async (req: Request, res: Response) => {
+productsRouter.post("/", async (req: Request, res: Response) => {
     try {
-        const newUser = req.body as IUser;
-        const result =  await (await DbConnection.getDbCollection(process.env.USERS_COLLECTION_NAME)).insertOne(newUser);
+        const newProduct = req.body as IProduct;
+        const result =  await (await DbConnection.getDbCollection(process.env.PRODUCTS_COLLECTION_NAME)).insertOne(newProduct);
         result
             ? res.status(200).send({"status":true,'result':`Successfully created a new user with id ${result.insertedId}`})
             : res.status(500).send({"status":false,'result':"Failed to create a new user."});
@@ -45,7 +43,7 @@ usersRouter.post("/", async (req: Request, res: Response) => {
     }
 });
 // PUT
-// usersRouter.put("/:id", async (req: Request, res: Response) => {
+// productsRouter.put("/:id", async (req: Request, res: Response) => {
 //     const id = req?.params?.id;
 
 //     try {
@@ -61,7 +59,7 @@ usersRouter.post("/", async (req: Request, res: Response) => {
 //     }
 // });
 // DELETE
-// usersRouter.delete("/:id", async (req: Request, res: Response) => {
+// productsRouter.delete("/:id", async (req: Request, res: Response) => {
 //     const id = req?.params?.id;
 
 //     try {

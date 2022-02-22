@@ -12,7 +12,7 @@ authenticationRouter.post('/',async (req:Request,res:Response) =>{
       const userDetails = req?.body as IAuthenticationModel;
       if(userDetails.email == null || userDetails.password == null )
         res.send("Please, enter information to login");
-      const result = await (await DbConnection.getDbCollection()).find({}).toArray();
+      const result = await (await DbConnection.getDbCollection(process.env.USERS_COLLECTION_NAME)).find({}).toArray();
       if(result !== null){
         result.forEach(el =>{
           if(el.email === userDetails.email && el.password === userDetails.password){

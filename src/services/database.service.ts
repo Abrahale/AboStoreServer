@@ -16,10 +16,10 @@ export class DbConnection{
     await client.connect();
 
     DbConnection.db = client.db(process.env.DB_NAME);
-
+    if(DbConnection.db) console.log('Succeffuly connected to the database')
  }
- static getDbCollection = async() =>{
-  const collection = await  DbConnection.db.collection(process.env.USERS_COLLECTION_NAME);
+ static getDbCollection = async(collectionName: string) =>{
+  const collection = await  DbConnection.db.collection(collectionName);
   return collection;
   }
 }

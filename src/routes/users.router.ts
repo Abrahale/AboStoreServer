@@ -1,81 +1,40 @@
 // External Dependencies
 import express, { Request, Response } from "express";
-import { ObjectId } from "mongodb";
 import {IUser, User} from "../models/user";
-import { DbConnection } from "../services/database.service";
-import * as dontenv from "dotenv";
+import { handleResponse, handleError } from "../middleware/response.middeware";
 // Global Config
 export const usersRouter = express.Router();
 usersRouter.use(express.json());
 // GET
-usersRouter.get("/", async (_req: Request, res: Response) => {
+usersRouter.get("/", async (req: Request, res: Response) => {
     try {
-       const collection = (await DbConnection.getDbCollection(process.env.USERS_COLLECTION_NAME));
-        const users = await collection.find({}).toArray();
-        res.status(200).send({users});
+      const users = await User.find({}).exec();
+      handleResponse(res,users)
     } catch (error: any) {
-        res.status(500).send(error.message);
+        handleError(res,error)
     }
 });
 
-usersRouter.get("/:id", async (req: Request, res: Response) => {
-    const id = req?.params?.id;
-
+usersRouter.get("/:", async (req: Request, res: Response) => {
+    const id = req.query.id;
     try {
-
-        const query = { _id: new ObjectId(id) };
-        const result =  (await DbConnection.getDbCollection(process.env.USERS_COLLECTION_NAME)).findOne(query) as unknown as User[];
+        const query = { _id: id };
+        const result =  await User.findById(query).exec();
         if (result) {
-            res.status(200).send(result);
+          handleResponse(res,result)
         }
     } catch (error) {
-        res.status(404).send(`Unable to find matching document with id: ${req.params.id}`);
+      handleError(res,`Unable to find matching document with id: ${req.query.id}`)
     }
 });
 // POST
 usersRouter.post("/", async (req: Request, res: Response) => {
     try {
         const newUser = req.body as IUser;
-        const result =  await (await DbConnection.getDbCollection(process.env.USERS_COLLECTION_NAME)).insertOne(newUser);
-        result
-            ? res.status(200).send({"status":true,'result':`Successfully created a new user with id ${result.insertedId}`})
-            : res.status(500).send({"status":false,'result':"Failed to create a new user."});
+        const user = new User(newUser);
+        const result = await user.save();
+         handleResponse(res,`Successfully created a new user with id ${result._id}`)
     } catch (error) {
-        res.status(400).send(error.message);
+      handleError(res,"Failed to create a new user.");
     }
 });
-// PUT
-// usersRouter.put("/:id", async (req: Request, res: Response) => {
-//     const id = req?.params?.id;
-
-//     try {
-//         const updatedUser: IUser = req.body as IUser;
-//         const query = { _id: new ObjectId(id) };
-
-//         const result = await collections.userCollection.updateOne(query, { $set: updatedUser });
-//         result
-//             ? res.status(200).send(`Successfully updated user with id ${id}`)
-//             : res.status(304).send(`User with id: ${id} not updated`);
-//     } catch (error) {
-//         res.status(400).send(error.message);
-//     }
-// });
-// DELETE
-// usersRouter.delete("/:id", async (req: Request, res: Response) => {
-//     const id = req?.params?.id;
-
-//     try {
-//         const query = { _id: new ObjectId(id) };
-//         const result = await collections.userCollection.deleteOne(query);
-
-//         if (result && result.deletedCount) {
-//             res.status(202).send(`Successfully removed user with id ${id}`);
-//         } else if (!result) {
-//             res.status(400).send(`Failed to remove user with id ${id}`);
-//         } else if (!result.deletedCount) {
-//             res.status(404).send(`User with id ${id} does not exist`);
-//         }
-//     } catch (error) {
-//         res.status(400).send(error.message);
-//     }
-// });

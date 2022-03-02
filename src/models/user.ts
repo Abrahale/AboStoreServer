@@ -1,31 +1,31 @@
 import Joi from 'joi'
-import { Schema, model, connect } from 'mongoose';
+import moongose, { Schema, model, connect } from 'mongoose';
 
-interface IUser {
-    name:string;
+export interface IUser {
+    username:string,
+    first_name:string;
+    last_name?:string;
     email:string;
     password:string;
+    telephone?:string;
+    createdDate?: Date;
+    modifiedDate?: Date;
 }
 
-class User implements IUser{
-    name: string;
-    email: string;
-    password: string;
-    constructor(
-        input: {
-        name: string,
-        email: string,
-        password: string
-    }) {
-        this.name = input?.name
-        this.email = input?.email
-        this.password = input?.password
-
-    }
-}
-
-const schema = new Schema<User>({
-    name: {
+const userSchema = new Schema<IUser>({
+  username: {
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 50
+    },
+    first_name: {
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 50
+    },
+    last_name: {
         type: String,
         required: true,
         minlength: 5,
@@ -43,16 +43,9 @@ const schema = new Schema<User>({
         required: true,
         minlength: 5,
         maxlength: 1024
-    }
-});
+    },
+    createdDate: { type: Date, default: Date.now },
+    modifiedDate: { type: Date, default: Date.now },
+})
 
-function validateUser(user:User) {
-    const schema = Joi.object({
-        name: Joi.string().min(5).max(50).required(),
-        email: Joi.string().min(5).max(255).required().email(),
-        password: Joi.string().min(5).max(255).required()
-    });
-    return schema.validate(user);
-}
-
-export {IUser, User, validateUser};
+export const User = moongose.model<IUser>("user", userSchema);

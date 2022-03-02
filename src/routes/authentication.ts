@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { DbConnection } from "../services/database.service";
-
+import { handleResponse, handleError } from "../middleware/response.middeware";
+import { User } from "../models/user";
 
 export const authenticationRouter = express.Router();
 authenticationRouter.use(express.json())
@@ -11,16 +12,18 @@ authenticationRouter.post('/',async (req:Request,res:Response) =>{
   try{
       const userDetails = req?.body as IAuthenticationModel;
       if(userDetails.email == null || userDetails.password == null )
-        res.send("Please, enter information to login");
-      const result = await (await DbConnection.getDbCollection(process.env.USERS_COLLECTION_NAME)).find({}).toArray();
+        handleError(res,"Please, enter information to login");
+      const result = await User.find({}).exec();
       if(result !== null){
         result.forEach(el =>{
           if(el.email === userDetails.email && el.password === userDetails.password){
-            res.status(200).send({"result":"Logged in successfully"})
+            handleResponse(res,"Logged in successfully")
           }
         })
-        res.status(401).send({'result':'Either your email or password is incorrect!'});
+        handleError(res,'Either your email or password is incorrect!');
       }
   }
-  catch(err){}
+  catch(err){
+    handleError(res,err);
+  }
 })

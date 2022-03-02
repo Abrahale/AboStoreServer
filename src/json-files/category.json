@@ -1,0 +1,22 @@
+[
+  {
+    "name":"Diapers",
+    "description":"Baby diapers basically it's self explaintory"
+  },
+  {
+    "name":"Handbags & Wallet",
+    "description":"Hand bags wallets for men and women"
+  },
+  {
+    "name":"Clothing",
+    "description":"Clothes for men women and childeren"
+  },
+  {
+    "name":"Foot wear",
+    "description":"Men and women foot wear"
+  },
+  {
+    "name":"nice one",
+    "description":"This has to make the call fail"
+  }
+]

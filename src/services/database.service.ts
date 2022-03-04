@@ -1,10 +1,7 @@
-// External Dependencies
 import * as mongoDB from "mongodb";
 import * as dotenv from "dotenv";
 import moongose from 'mongoose';
-// Global Variables
 export const collections: { userCollection?: mongoDB.Collection } = {}
-// Initialize Connection
 export class DbConnection{
   constructor(){this.init()}
   init = async () => {
@@ -18,4 +15,5 @@ export class DbConnection{
       else console.log("========== DB connection established ===========")
     })
  }
+
 }

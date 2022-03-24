@@ -8,7 +8,7 @@
     "preserve": "npm run build",
     "serve": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon -q dist/index.js\"",
     "prestart": "npm run build",
-    "start":"concurrently \"tsc -w\" \"nodemon dist/index.js \"  npm:start:*",
+    "start": "concurrently \"tsc -w\" \"nodemon dist/index.js \"  npm:start:*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon -e ts -w ./src -x npm run watch:serve",
     "watch:serve": "ts-node --inspect src/index.ts"
@@ -16,6 +16,7 @@
   "author": "Ab_Kiros John Kiros",
   "license": "MIT",
   "dependencies": {
+    "@faker-js/faker": "^6.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.10",

@@ -9,12 +9,12 @@ import { DbConnection } from './services/database.service';
 import { authenticationRouter } from './routes/authentication';
 import { productsRouter } from './routes/products';
 import { seedDatabaseRouter} from './routes/seed-database';
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-const FE_URL = ['http://localhost:4200'];
+const FE_URL = ['http://localhost:4200/'];
 const options: cors.CorsOptions = {
     allowedHeaders: [
         'Origin',

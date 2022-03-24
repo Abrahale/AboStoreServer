@@ -1,11 +1,8 @@
-// External Dependencies
 import express, { Request, Response } from "express";
 import {IUser, User} from "../models/user";
 import { handleResponse, handleError } from "../middleware/response.middeware";
-// Global Config
 export const usersRouter = express.Router();
 usersRouter.use(express.json());
-// GET
 usersRouter.get("/", async (req: Request, res: Response) => {
     try {
       const users = await User.find({}).exec();
@@ -27,10 +24,11 @@ usersRouter.get("/:", async (req: Request, res: Response) => {
       handleError(res,`Unable to find matching document with id: ${req.query.id}`)
     }
 });
-// POST
 usersRouter.post("/", async (req: Request, res: Response) => {
     try {
         const newUser = req.body as IUser;
+        console.log('newUser', req?.body)
+        console.log(newUser)
         const user = new User(newUser);
         const result = await user.save();
          handleResponse(res,`Successfully created a new user with id ${result._id}`)

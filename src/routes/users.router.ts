@@ -27,12 +27,10 @@ usersRouter.get("/:", async (req: Request, res: Response) => {
 usersRouter.post("/", async (req: Request, res: Response) => {
     try {
         const newUser = req.body as IUser;
-        console.log('newUser', req?.body)
-        console.log(newUser)
         const user = new User(newUser);
         const result = await user.save();
-         handleResponse(res,`Successfully created a new user with id ${result._id}`)
+        handleResponse(res,`Successfully created a new user with id ${result._id}`)
     } catch (error) {
-      handleError(res,"Failed to create a new user.");
+      handleError(res,`Failed to create a new user. Error: ${error}`);
     }
 });

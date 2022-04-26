@@ -11,6 +11,11 @@ import { productsRouter } from './routes/products';
 import { seedDatabaseRouter} from './routes/seed-database';
 import { categoryRouter } from './routes/category';
 import { departmentRouter } from './routes/department';
+import { ExceptionlessClient } from 'exceptionless';
+
+const client = ExceptionlessClient.default;
+client.config.apiKey = process.env.EXECEPTION_LESS_API_KEY;
+client.submitLog("Wow this will be cool if it's working")
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(helmet());

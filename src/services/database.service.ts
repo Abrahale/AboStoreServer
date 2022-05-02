@@ -5,6 +5,7 @@ export const collections: { userCollection?: mongoDB.Collection } = {}
 export class DbConnection{
   constructor(){this.init()}
   init = async () => {
+    console.log('just for changes for deploys')
     await moongose.connect(process.env.DB_CONN_STRING, {
       dbName:process.env.DB_NAME
     },(err)=>{

@@ -12,6 +12,7 @@ import { seedDatabaseRouter} from './routes/seed-database';
 import { categoryRouter } from './routes/category';
 import { departmentRouter } from './routes/department';
 import { ExceptionlessClient } from 'exceptionless';
+import {filesRouter} from './routes/file'
 
 const client = ExceptionlessClient.default;
 client.config.apiKey = process.env.EXECEPTION_LESS_API_KEY;
@@ -21,7 +22,6 @@ const app = express();
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-const FE_URL = ['http://localhost:4200/'];
 const options: cors.CorsOptions = {
     allowedHeaders: [
         'Origin',
@@ -33,7 +33,7 @@ const options: cors.CorsOptions = {
       credentials: true,
       methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
       preflightContinue: false,
-      origin: FE_URL
+      origin: process.env.FE_URL
 };
 app.use(cors());
 app.use("/users", usersRouter);
@@ -42,6 +42,7 @@ app.use("/departments", departmentRouter);
 app.use("/categories", categoryRouter);
 app.use("/products", productsRouter);
 app.use("/seed-db", seedDatabaseRouter);
+app.use("/file",filesRouter);
 new DbConnection();
 app.listen(PORT, () => {
     console.log(`Server started and listening at http://localhost:${PORT}`);
